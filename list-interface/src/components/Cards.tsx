@@ -2,17 +2,7 @@ import { FC } from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
-import { getProducts } from '../urls/products';
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-  rating: { rate: number, count: number }
-}
+import { Product, getProducts } from '../urls/products';
 
 interface CardsProps {
   onCardClick: (product: Product) => void;
@@ -23,7 +13,7 @@ const Cards: FC<CardsProps> = ({ onCardClick }) => {
   const baseClass =
     'rounded-lg h-10 w-20 flex items-center justify-center text-xs text-white'
 
-  const renderPaymentBadge = (category: string) => {
+  const renderBadge = (category: string) => {
     switch (category) {
       case 'MEN\'S CLOTHING':
         return <div className={`${baseClass} bg-black `}>men's clothing</div>
@@ -38,7 +28,7 @@ const Cards: FC<CardsProps> = ({ onCardClick }) => {
     }
   }
 
-  const renderCompanyIcon = (iconUrl: string | null, companyName: string) => {
+  const renderIcon = (iconUrl: string | null, companyName: string) => {
     const placeholderClasses =
       'w-16 h-16 flex items-center justify-center bg-[#D3D3D3] text-gray rounded'
 
@@ -64,25 +54,28 @@ const Cards: FC<CardsProps> = ({ onCardClick }) => {
   if (error) return <div>Error loading products</div>;
 
   return (
-    <div className="h-full overflow-y-scroll no-scrollbar text-sm">
+    <div className="h-[390px] overflow-y-scroll no-scrollbar text-sm">
       {data.map((product) => (
         <div
           key={product.id}
           className="flex items-start gap-4 border-b border-blue py-3 cursor-pointer px-4"
           onClick={() => onCardClick(product)}
         >
-          {renderCompanyIcon(product.image, product.title)}
+          {renderIcon(product.image, product.title)}
 
           <div className="flex flex-col gap-1 flex-grow">
             <p className="font-semibold">{product.title}</p>
-            <div className="flex gap-5 items-center justify-between">
+            <div className="flex gap-5 items-center justify-start">
               <span className="text-gray">
-                {product.rating.count}
+                In existence: {product.rating.count}
               </span>
-              {renderPaymentBadge(product.category.toUpperCase())}
+
+              {/* BADGES */}
+              {renderBadge(product.category.toUpperCase())}
             </div>
           </div>
 
+          {/* price */}
           <div className="flex items-center justify-center h-20 w-20 ml-auto">
             {`$${product.price}`}
           </div>

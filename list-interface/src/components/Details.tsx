@@ -44,7 +44,7 @@ const secondTableColumns = [
  * listas de siniestros, centro digital, recibos y bitácora.
  * También proporciona la funcionalidad para descargar certificados y comenzar reclamaciones.
 */
-const Details: FC = ({ selectedPolicy, openModal }) => {
+const Details: FC = ({ selectedProduct, openModal }) => {
   /* ESTADOS */
  
   /* Estados de Error para cada Tabla */
@@ -94,7 +94,7 @@ const Details: FC = ({ selectedPolicy, openModal }) => {
 
   return (
     <>
-      {selectedPolicy ? (
+      {selectedProduct ? (
         <div className='flex flex-col gap-4 relative'>
           <div className='flex items-center'>
             <div className='flex flex-col items-center'>
@@ -117,16 +117,16 @@ const Details: FC = ({ selectedPolicy, openModal }) => {
 
             <div className='flex flex-col gap-1 md:w-2/3 md:text-sm ml-2'>
               <span className='flex text-gray gap-2' data-tooltip="Número de la póliza">
-                Póliza: <p className='text-black truncate'>{selectedPolicy?.workOrderExternalNumber}</p>
+                Póliza: <p className='text-black truncate'>{selectedProduct?.workOrderExternalNumber}</p>
               </span>
               <span className='flex text-gray gap-2' data-tooltip="Total de reclamos realizados">
-                Total Reclamos: <p className='text-black truncate'> {selectedPolicy?.totalClaims}</p>
+                Total Reclamos: <p className='text-black truncate'> {selectedProduct?.totalClaims}</p>
               </span>
               <span className='flex text-gray gap-2' data-tooltip="Ramo de la póliza">
-                Ramo: <p className='text-black truncate'>{selectedPolicy?.subLineBusiness}</p>
+                Ramo: <p className='text-black truncate'>{selectedProduct?.subLineBusiness}</p>
               </span>
-              <span className='flex text-gray gap-2' data-tooltip={`Asegurado: ${selectedPolicy?.insurerName}`}>
-                Asegurado: <p className='text-black truncate'>{selectedPolicy?.insurerName}</p>
+              <span className='flex text-gray gap-2' data-tooltip={`Asegurado: ${selectedProduct?.insurerName}`}>
+                Asegurado: <p className='text-black truncate'>{selectedProduct?.insurerName}</p>
               </span>
             </div>
           </div>

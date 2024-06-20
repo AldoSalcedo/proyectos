@@ -14,8 +14,7 @@ const Buttons: FC<ButtonsProps> = ({ filterFunction, navigateTo, selected, child
   const handleClick = () => {
     if (filterFunction) {
       filterFunction();
-    }
-    if (navigateTo) {
+    } else if (navigateTo) {
       navigate(navigateTo);
     }
   };
