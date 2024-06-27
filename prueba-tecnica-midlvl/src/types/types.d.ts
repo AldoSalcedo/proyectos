@@ -7,9 +7,9 @@ declare global {
   }
 }
 
-export interface APIResults {
-  results: User[];
-  info:    Info;
+export interface FetchUsersResponse  {
+  nextCursor?: number;
+  users: User[];
 }
 
 export interface Info {

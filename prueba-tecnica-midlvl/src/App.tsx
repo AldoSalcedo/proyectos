@@ -1,8 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 import { SortBy, type User } from './types/types.d'
 import { UsersList } from './components/UsersList'
+import { useUsers } from './hooks/useUsers'
 
 /* 1.- Hacer un fetching de datos de una API */
 /* 2.- Mostrar los datos en una tabla */
@@ -15,12 +16,23 @@ import { UsersList } from './components/UsersList'
 /* 9.- Evita volver a ordenar los usuarios cuando el usuario esta cambiando el filtro por pais (mi solucion: Usar useMemo)*/
 /* 10.- Acomodar con un click en el header de alguna columna */
 function App() {
-  const [users, setUsers] = useState<User[]>([])
+  const {
+    isLoading,
+    isError,
+    users,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    deleteUser,
+    isDeletingUser,
+    deletingUserEmail
+  } = useUsers()
+
   const [showColors, setShowColors] = useState(false)
   const [sorting, setSorting] = useState<SortBy>(SortBy.NONE)
   const [filterCountry, setFilterCountry] = useState<string | null>(null)
 
-  const originalUsers = useRef<User[]>([])
+  /* const originalUsers = useRef<User[]>([]) */
   /* useRef ==> guardaremos un valor que queremos que se comparta entre renderizados, 
       al cambiar no se volvera a renderizar el componente
   */
@@ -35,30 +47,17 @@ function App() {
     setSorting(newSortingValue)
   }
 
-  const handleReset = () => {
-    setUsers(originalUsers.current)
+  const handleReset = async () => {
+    await refetch()
   }
 
   const handleDelete = (email: string) => {
-    const filteredUsers = users.filter((user) => user.email != email)
-    setUsers(filteredUsers)
+    deleteUser(email)
   }
 
   const handleChangeSort = (sort: SortBy) => {
     setSorting(sort)
   }
-
-  useEffect(() => {
-    fetch('https://randomuser.me/api/?results=100')
-      .then((res) => res.json())
-      .then((res) => {
-        setUsers(res.results)
-        originalUsers.current = res.results
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  }, [])
 
   const filteredUsers = useMemo(() => {
     return filterCountry != null && filterCountry.length > 0
@@ -91,13 +90,13 @@ function App() {
     <>
       <h1>Prueba Técnica</h1>
       <header>
-        <button onClick={toggleColors}>Color Rows</button>
+        <button onClick={toggleColors}>Colorear Filas</button>
 
         <button onClick={toggleSortByCountry}>
           {sorting === SortBy.COUNTRY ? 'No ordenar' : 'Order by Country'}
         </button>
 
-        <button onClick={handleReset}>Reset State</button>
+        <button onClick={handleReset}>Resetear Estado</button>
 
         <input
           type="text"
@@ -106,12 +105,32 @@ function App() {
         />
       </header>
       <main>
-        <UsersList
-          changeSorting={handleChangeSort}
-          deleteUser={handleDelete}
-          showColors={showColors}
-          users={sortedUsers}
-        />
+        {users.length > 0 && (
+          <UsersList
+            changeSorting={handleChangeSort}
+            deleteUser={handleDelete}
+            showColors={showColors}
+            users={sortedUsers}
+            isDeletingUser={isDeletingUser}
+            deletingUserEmail={deletingUserEmail}
+          />
+        )}
+
+        {isLoading && <p>Cargando...</p>}
+
+        {isError && <p>Ha ocurrido un error</p>}
+
+        {!isLoading && !isError && users.length === 0 && <p>No hay usuarios</p>}
+
+        {!isLoading && !isError && hasNextPage && (
+          <button onClick={() => void fetchNextPage()}>
+            Cargar mas resultados
+          </button>
+        )}
+
+        {!isLoading && !isError && hasNextPage === false && (
+          <p>Ya no hay mas resultados</p>
+        )}
       </main>
     </>
   )
