@@ -6,7 +6,7 @@ interface UserInfoProps {
   name: string;
 }
 
-export function UserInfo({ name }: UserInfoProps) {
+export function WelcomeMessage({ name }: UserInfoProps) {
   const { theme } = useTheme();
 
   const textColorClass = theme === "light" ? "text-black" : "text-white";

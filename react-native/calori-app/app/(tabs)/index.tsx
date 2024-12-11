@@ -1,8 +1,8 @@
 import { Text, View } from "react-native";
 import { Link } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
-import { useTheme } from "../context/ThemeContext";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { useTheme } from "../../context/ThemeContext";
+import { ThemeToggle } from "../../components/ThemeToggle";
 
 export default function Index() {
   const { theme } = useTheme();

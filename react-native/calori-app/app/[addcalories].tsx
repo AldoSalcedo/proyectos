@@ -1,8 +1,10 @@
 import { View, Text, Pressable, TextInput } from "react-native";
-import { Link } from "expo-router";
 import { useTheme } from "../context/ThemeContext";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
+import { styled } from "nativewind";
+
+const StyledPressable = styled(Pressable);
 
 export default function AddCalories() {
   const { theme } = useTheme();
@@ -66,30 +68,18 @@ export default function AddCalories() {
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
-          <Pressable
+          <StyledPressable
             onPress={handleSearch}
             className={`px-6 py-2 rounded-lg
-              ${theme === "light" ? "bg-blue-500" : ""}
-              ${theme === "dark" ? "bg-blue-600" : ""}
+              ${theme === "light" ? "bg-green-500" : ""}
+              ${theme === "dark" ? "bg-green-600" : ""}
               ${theme === "christmas" ? "bg-red-500" : ""}
             `}
           >
             <Text className="text-white font-semibold">Search</Text>
-          </Pressable>
+          </StyledPressable>
         </View>
       </View>
-
-      <Link href="/" className="mt-4">
-        <Text
-          className={`
-            ${theme === "light" ? "text-light-text" : ""}
-            ${theme === "dark" ? "text-dark-text" : ""}
-            ${theme === "christmas" ? "text-christmas-text" : ""}
-          `}
-        >
-          Go back
-        </Text>
-      </Link>
     </View>
   );
 }
