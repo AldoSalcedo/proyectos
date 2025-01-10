@@ -12,6 +12,7 @@ import { WelcomeMessage } from "@/components/WelcomeMessage";
 import { ThemeProvider, useTheme } from "../context/ThemeContext";
 import { UserAvatar } from "@/components/ui/Icons";
 import { Pressable } from "react-native";
+import React from "react";
 
 SplashScreen.preventAutoHideAsync();
 

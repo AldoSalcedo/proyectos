@@ -1,11 +1,12 @@
 import { TouchableOpacity, Text, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import React from "react";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <View className="flex-row space-x-2">
+    <View className="flex-row py-5 space-x-2">
       <TouchableOpacity
         className={`px-4 py-2 rounded-lg ${
           theme === "light" ? "bg-light-primary" : "bg-gray-300"
