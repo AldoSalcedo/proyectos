@@ -1,13 +1,19 @@
-export interface FoodInput {
-  name: string;
-  calories: number | null;
-  portion: number | null;
-  date?: string;
+export interface Meal {
+  id: string
+  name: string
+  calories: number
+  portion: number
+  date: string
 }
 
-export type TodayCaloriesProps = {
-  total: number | string;
-  consumed: number | string;
-  remaining: number | string;
-  percentage: number;
-};
+export interface FoodItem {
+  id: string
+  name: string
+  calories: number
+}
+
+export interface AddMealParams {
+  name: string
+  calories: number
+  portion: number
+}

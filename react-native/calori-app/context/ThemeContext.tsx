@@ -1,19 +1,30 @@
-import { createContext, useContext, useState } from "react";
-
-type ThemeMode = "light" | "dark" | "christmas";
+import React, { createContext, useContext, useState } from "react";
+import { ThemeMode, Theme } from "../types/theme";
+import { themes } from "../config/themes";
 
 interface ThemeContextType {
-  theme: ThemeMode;
-  setTheme: (theme: ThemeMode) => void;
+  theme: Theme;
+  themeMode: ThemeMode;
+  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [themeMode, setThemeMode] = useState<ThemeMode>("light");
+
+  const toggleTheme = () => {
+    setThemeMode((current) => {
+      if (current === "light") return "dark";
+      if (current === "dark") return "christmas";
+      return "light";
+    });
+  };
+
+  const theme = themes[themeMode];
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, themeMode, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
