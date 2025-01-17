@@ -1,44 +1,19 @@
+import React from "react";
 import { TouchableOpacity, Text, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
-import React from "react";
+import { twColor, twText } from "../utils/theme";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { themeMode, toggleTheme } = useTheme();
 
   return (
-    <View className="flex-row py-5 space-x-2">
+    <View>
       <TouchableOpacity
-        className={`px-4 py-2 rounded-lg ${
-          theme === "light" ? "bg-light-primary" : "bg-gray-300"
-        }`}
-        onPress={() => setTheme("light")}
+        className={`p-2.5 rounded-lg items-center my-2.5 bg-${twColor(themeMode, "surface")}`}
+        onPress={toggleTheme}
       >
-        <Text className={theme === "light" ? "text-white" : "text-gray-600"}>
-          Light
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-lg ${
-          theme === "dark" ? "bg-dark-primary" : "bg-gray-300"
-        }`}
-        onPress={() => setTheme("dark")}
-      >
-        <Text className={theme === "dark" ? "text-white" : "text-gray-600"}>
-          Dark
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        className={`px-4 py-2 rounded-lg ${
-          theme === "christmas" ? "bg-christmas-primary" : "bg-gray-300"
-        }`}
-        onPress={() => setTheme("christmas")}
-      >
-        <Text
-          className={theme === "christmas" ? "text-white" : "text-gray-600"}
-        >
-          Christmas
+        <Text className={twText(themeMode)}>
+          Theme: {themeMode.charAt(0).toUpperCase() + themeMode.slice(1)}
         </Text>
       </TouchableOpacity>
     </View>

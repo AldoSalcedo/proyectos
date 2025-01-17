@@ -1,14 +1,16 @@
+import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import { twColor } from "../utils/theme";
 
 export function LoadingSpinner() {
-  const { theme } = useTheme();
+  const { themeMode } = useTheme();
 
   return (
     <View className="flex-1 justify-center items-center">
       <ActivityIndicator
         size="large"
-        color={theme === "light" ? "#007AFF" : "#0A84FF"}
+        color={`bg-${twColor(themeMode, "primary")}`}
       />
     </View>
   );

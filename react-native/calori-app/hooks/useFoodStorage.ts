@@ -1,102 +1,67 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FoodInput } from "@/types/index";
-import { isToday } from "date-fns";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useCallback } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Meal, AddMealParams } from '../types'
 
-const MY_FOOD_KEY = "@MyFood:Key";
-const MY_TODAY_FOOD_KEY = "@MyTodayFood:Key";
+const STORAGE_KEY = '@food-tracker:meals'
 
-export const useFoodStorage = () => {
-  const saveInfoToStorage = async (storageKey: string, meal: FoodInput) => {
+export function useFoodStorage() {
+  const saveMeal = useCallback(async (params: AddMealParams): Promise<void> => {
     try {
-      const currentSavedFood = await AsyncStorage.getItem(storageKey);
-
-      if (currentSavedFood !== null) {
-        const currentSavedFoodParsed = JSON.parse(currentSavedFood);
-        currentSavedFoodParsed.push(meal);
-
-        await AsyncStorage.setItem(
-          storageKey,
-          JSON.stringify(currentSavedFoodParsed),
-        );
-
-        return meal;
-      }
-
-      await AsyncStorage.setItem(storageKey, JSON.stringify([meal]));
-      return meal;
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
-  const handleSaveFood = async ({ calories, name, portion }: FoodInput) => {
-    try {
-      const result = await saveInfoToStorage(MY_FOOD_KEY, {
-        calories,
-        name,
-        portion,
-      });
-      return Promise.resolve(result);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
-  const handleGetFoods = async () => {
-    try {
-      const foods = await AsyncStorage.getItem(MY_FOOD_KEY);
-
-      if (foods !== null) {
-        const parsedFoods = JSON.parse(foods);
-        return Promise.resolve(parsedFoods);
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
-  const handleSaveTodayFood = async ({
-    calories,
-    name,
-    portion,
-  }: FoodInput) => {
-    try {
-      const savedMeal = await saveInfoToStorage(MY_TODAY_FOOD_KEY, {
-        calories,
-        name,
-        portion,
+      const currentMeals = await getMeals()
+      const newMeal: Meal = {
+        id: Date.now().toString(),
         date: new Date().toISOString(),
-      });
-      console.log(savedMeal); // aqui me arroda undefined
-      return Promise.resolve(savedMeal);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
-  const handleGetTodayFood = async () => {
-    try {
-      const foods = await AsyncStorage.getItem(MY_TODAY_FOOD_KEY);
-
-      if (foods !== null) {
-        const parsedFoods = JSON.parse(foods) as FoodInput[];
-        return Promise.resolve(
-          parsedFoods.filter(
-            (meal) => meal.date && isToday(new Date(meal.date)),
-          ),
-        );
+        ...params,
       }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify([...currentMeals, newMeal])
+      )
     } catch (error) {
-      return Promise.reject(error);
+      console.error('Error saving meal:', error)
+      throw new Error('Failed to save meal')
     }
-  };
+  }, [])
+
+  const getMeals = useCallback(async (): Promise<Meal[]> => {
+    try {
+      const meals = await AsyncStorage.getItem(STORAGE_KEY)
+      return meals ? JSON.parse(meals) : []
+    } catch (error) {
+      console.error('Error getting meals:', error)
+      return []
+    }
+  }, [])
+
+  const getTodayMeals = useCallback(async (): Promise<Meal[]> => {
+    try {
+      const meals = await getMeals()
+      const today = new Date().toISOString().split('T')[0]
+
+      return meals.filter((meal) => meal.date.split('T')[0] === today)
+    } catch (error) {
+      console.error('Error getting today meals:', error)
+      return []
+    }
+  }, [])
+
+  const removeMeal = useCallback(async (id: string): Promise<void> => {
+    try {
+      const meals = await getMeals()
+      const filteredMeals = meals.filter((meal) => meal.id !== id)
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filteredMeals))
+    } catch (error) {
+      console.error('Error removing meal:', error)
+      throw new Error('Failed to remove meal')
+    }
+  }, [])
 
   return {
-    onSaveFood: handleSaveFood,
-    onGetFoods: handleGetFoods,
-    onSaveTodayFood: handleSaveTodayFood,
-    onGetTodayFood: handleGetTodayFood,
-  };
-};
-
-// metodo para obtener la comida del dia de hoy
+    saveMeal,
+    getMeals,
+    getTodayMeals,
+    removeMeal,
+  }
+}

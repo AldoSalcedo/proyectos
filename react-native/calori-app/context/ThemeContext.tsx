@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
-import { ThemeMode, Theme } from "../types/theme";
-import { themes } from "../config/themes";
+import { ThemeMode } from "../types/theme";
 
 interface ThemeContextType {
-  theme: Theme;
   themeMode: ThemeMode;
   toggleTheme: () => void;
 }
@@ -21,10 +19,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const theme = themes[themeMode];
-
   return (
-    <ThemeContext.Provider value={{ theme, themeMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ themeMode, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

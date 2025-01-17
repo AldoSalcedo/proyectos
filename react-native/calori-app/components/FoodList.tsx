@@ -1,89 +1,58 @@
-import { View, Text, ScrollView, Pressable, Alert } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { FoodItem } from "../types";
 import { useTheme } from "../context/ThemeContext";
-import { FoodInput } from "@/types/index";
-import { AntDesign } from "@expo/vector-icons";
-import { useFoodStorage } from "@/hooks/useFoodStorage";
-import React from "react";
+import { tw, twColor } from "../utils/theme";
+
+const FOOD_DATA: FoodItem[] = [
+  { id: "1", name: "Apple", calories: 52 },
+  { id: "2", name: "Banana", calories: 89 },
+  { id: "3", name: "Orange", calories: 47 },
+  // Add more food items...
+];
 
 interface FoodListProps {
-  foods: FoodInput[];
+  onSelectFood: (food: FoodItem) => void;
 }
 
-export function FoodList({ foods }: FoodListProps) {
-  const { theme } = useTheme();
-  const { onSaveTodayFood } = useFoodStorage();
-
-  const handleAddItemPress = async ({ calories, name, portion }: FoodInput) => {
-    try {
-      await onSaveTodayFood({ calories, name, portion });
-      Alert.alert("Comida agregada al dia");
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Comida no agregada");
-    }
-  };
+export function FoodList({ onSelectFood }: FoodListProps) {
+  const { themeMode } = useTheme();
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <ScrollView className="mx-6 mb-20">
-      {foods.map((food, index) => (
-        <View
-          key={index}
-          className={`mb-4 p-4 rounded-lg border flex-row justify-between items-start
-            ${theme === "light" ? "border-gray-200 bg-green-100" : ""}
-            ${theme === "dark" ? "border-gray-700 bg-green-900" : ""}
-            ${theme === "christmas" ? "border-red-500 bg-green-100" : ""}
-          `}
-        >
-          <View className="flex-1">
-            <Text
-              className={`font-bold text-lg mb-1
-              ${theme === "light" ? "text-gray-800" : ""}
-              ${theme === "dark" ? "text-white" : ""}
-              ${theme === "christmas" ? "text-red-600" : ""}
-            `}
-            >
-              {food.name}
+    <View className={tw("flex-1", themeMode)}>
+      <TextInput
+        className={`p-2.5 border-b border-${twColor(themeMode, "border")} text-${twColor(themeMode, "text")} mb-2.5`}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search foods..."
+        placeholderTextColor={`text-${twColor(themeMode, "text-secondary")}`}
+      />
+      <FlatList
+        data={FOOD_DATA.filter((food) =>
+          food.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        )}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => onSelectFood(item)}
+            className={`flex-row justify-between p-4 border-b border-${twColor(themeMode, "border")}`}
+          >
+            <Text className={`text-base text-${twColor(themeMode, "text")}`}>
+              {item.name}
             </Text>
-            <Text
-              className={`
-              ${theme === "light" ? "text-gray-600" : ""}
-              ${theme === "dark" ? "text-gray-300" : ""}
-              ${theme === "christmas" ? "text-green-700" : ""}
-            `}
-            >
-              Portion: {food.portion}g
+            <Text className={`text-${twColor(themeMode, "text-secondary")}`}>
+              {item.calories} cal
             </Text>
-          </View>
-          <View className="items-center ml-4">
-            <View className="bg-white rounded-full p-1 mb-2 border border-black">
-              <Pressable onPress={() => handleAddItemPress(food)}>
-                <AntDesign
-                  name="plus"
-                  size={13}
-                  color={
-                    theme === "light"
-                      ? "#000000"
-                      : theme === "dark"
-                        ? "#000000"
-                        : theme === "christmas"
-                          ? "#FF0000"
-                          : "#000000"
-                  }
-                />
-              </Pressable>
-            </View>
-            <Text
-              className={`
-              ${theme === "light" ? "text-gray-600" : ""}
-              ${theme === "dark" ? "text-gray-300" : ""}
-              ${theme === "christmas" ? "text-green-700" : ""}
-            `}
-            >
-              Calories: {food.calories}
-            </Text>
-          </View>
-        </View>
-      ))}
-    </ScrollView>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
   );
 }

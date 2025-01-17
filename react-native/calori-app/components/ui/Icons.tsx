@@ -1,6 +1,6 @@
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import React from "react";
 import { Image } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 interface IconProps {
   size?: number;
@@ -13,28 +13,18 @@ interface AvatarProps {
   [key: string]: any;
 }
 
-export const CircleInfoIcon = ({
-  size = 24,
-  color = "white",
-  ...props
-}: IconProps) => (
-  <FontAwesome6 name="circle-info" size={size} color={color} {...props} />
-);
-
 export const HomeIcon = ({
   size = 32,
   color = "white",
   ...props
-}: IconProps) => (
-  <FontAwesome name="home" size={size} color={color} {...props} />
-);
+}: IconProps) => <AntDesign name="home" size={size} color={color} {...props} />;
 
 export const InfoIcon = ({
   size = 32,
-  color = "white",
+  color = "green",
   ...props
 }: IconProps) => (
-  <FontAwesome name="info" size={size} color={color} {...props} />
+  <AntDesign name="pluscircle" size={size} color={color} {...props} />
 );
 
 export const UserAvatar = ({ uri, ...props }: AvatarProps) => (
