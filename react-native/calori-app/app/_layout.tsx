@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { ThemedView } from "@/components/themed";
+import { FoodProvider } from "../context/FoodContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,26 +26,21 @@ export default function Layout() {
 
   return (
     <ThemeProvider>
-      <ThemedView className="flex-1">
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: {
-              backgroundColor: "transparent",
-            },
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="addcalories"
-            options={{
-              presentation: "modal",
+      <FoodProvider>
+        <ThemedView className="flex-1">
+          <Stack
+            screenOptions={{
               headerShown: false,
+              contentStyle: {
+                backgroundColor: "transparent",
+              },
             }}
-          />
-        </Stack>
-        <StatusBar />
-      </ThemedView>
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar />
+        </ThemedView>
+      </FoodProvider>
     </ThemeProvider>
   );
 }

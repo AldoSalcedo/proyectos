@@ -27,7 +27,7 @@ export const InfoIcon = ({
   <AntDesign name="pluscircle" size={size} color={color} {...props} />
 );
 
-export const UserAvatar = ({ uri, ...props }: AvatarProps) => (
+export const UserAvatarImage = ({ uri, ...props }: AvatarProps) => (
   <Image
     source={{
       uri: uri,

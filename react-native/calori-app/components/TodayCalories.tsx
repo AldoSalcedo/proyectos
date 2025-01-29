@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { tw, twColor } from "../utils/theme";
 import { Meal } from "../types";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 interface TodayCaloriesProps {
   meals: Meal[];
@@ -16,8 +17,8 @@ export function TodayCalories({ meals, goal = 2000 }: TodayCaloriesProps) {
   const progress = (totalCalories / goal) * 100;
 
   return (
-    <View className={tw("m-4 rounded-xl p-4 shadow-lg", themeMode)}>
-      <View className="flex-row justify-between items-center mb-4">
+    <View className={tw("mx-4 rounded-xl p-4 shadow-lg", themeMode)}>
+      <View className="flex-row justify-between items-center">
         <Text
           className={`text-lg font-semibold text-${twColor(themeMode, "text")}`}
         >
@@ -28,19 +29,22 @@ export function TodayCalories({ meals, goal = 2000 }: TodayCaloriesProps) {
         </Text>
       </View>
 
-      <View
-        className={`h-2.5 rounded-full bg-${twColor(themeMode, "border")} mb-4`}
-      >
-        <View
-          className={`h-full rounded-full bg-${twColor(themeMode, "success")}`}
-          style={{ width: `${Math.min(progress, 100)}%` }}
+      <View className="items-center py-1">
+        <CircularProgress
+          value={progress}
+          valueSuffix="%"
+          radius={40}
+          duration={1000}
+          progressValueColor={`#${twColor(themeMode, "text")}`}
+          maxValue={100}
+          activeStrokeColor={remainingCalories < 0 ? "#ff4444" : "#4CAF50"}
         />
       </View>
 
-      <View className="flex-row justify-around">
+      <View className="flex-row justify-around mt-2">
         <View className="items-center">
           <Text
-            className={`text-2xl font-semibold text-${twColor(themeMode, "text")}`}
+            className={`text-xl font-semibold text-${twColor(themeMode, "text")}`}
           >
             {totalCalories}
           </Text>
@@ -50,7 +54,7 @@ export function TodayCalories({ meals, goal = 2000 }: TodayCaloriesProps) {
         </View>
         <View className="items-center">
           <Text
-            className={`text-2xl font-semibold text-${twColor(
+            className={`text-xl font-semibold text-${twColor(
               themeMode,
               remainingCalories < 0 ? "error" : "success",
             )}`}

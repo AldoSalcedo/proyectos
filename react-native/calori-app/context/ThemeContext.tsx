@@ -1,22 +1,29 @@
-import React, { createContext, useContext, useState } from "react";
-import { ThemeMode } from "../types/theme";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useColorScheme } from "react-native";
+
+export type ThemeMode = "light" | "dark";
 
 interface ThemeContextType {
   themeMode: ThemeMode;
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeMode, setThemeMode] = useState<ThemeMode>("light");
+  const systemColorScheme = useColorScheme();
+  const [themeMode, setThemeMode] = useState<ThemeMode>(
+    systemColorScheme || "light",
+  );
+
+  useEffect(() => {
+    if (systemColorScheme) {
+      setThemeMode(systemColorScheme);
+    }
+  }, [systemColorScheme]);
 
   const toggleTheme = () => {
-    setThemeMode((current) => {
-      if (current === "light") return "dark";
-      if (current === "dark") return "christmas";
-      return "light";
-    });
+    setThemeMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   return (
@@ -26,10 +33,4 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
-  }
-  return context;
-}
+export const useTheme = () => useContext(ThemeContext);

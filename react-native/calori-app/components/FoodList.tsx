@@ -1,55 +1,103 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from "react-native";
-import { FoodItem } from "../types";
+import { Meal } from "../types";
 import { useTheme } from "../context/ThemeContext";
-import { tw, twColor } from "../utils/theme";
-
-const FOOD_DATA: FoodItem[] = [
-  { id: "1", name: "Apple", calories: 52 },
-  { id: "2", name: "Banana", calories: 89 },
-  { id: "3", name: "Orange", calories: 47 },
-  // Add more food items...
-];
+import { twColor } from "../utils/theme";
+import { useFoodStorage } from "@/hooks/useFoodStorage";
+import { Ionicons } from "@expo/vector-icons";
+import { useFoodContext } from "@/context/FoodContext";
 
 interface FoodListProps {
-  onSelectFood: (food: FoodItem) => void;
+  onMealAdded: () => void;
 }
 
-export function FoodList({ onSelectFood }: FoodListProps) {
+export function FoodList({ onMealAdded }: FoodListProps) {
   const { themeMode } = useTheme();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [foods, setFoods] = useState<Meal[]>([]);
+  const { refreshTimestamp } = useFoodContext();
+
+  const { getMeals, saveTodayMeals, removeMeal } = useFoodStorage();
+
+  const loadFoods = useCallback(async () => {
+    try {
+      const foodResponse = await getMeals();
+      setFoods(foodResponse);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Failed to load food");
+    }
+  }, [getMeals]);
+
+  useEffect(() => {
+    loadFoods();
+  }, [loadFoods, refreshTimestamp]);
+
+  const handleDeleteFood = async (id: string) => {
+    try {
+      await removeMeal(id, false);
+      loadFoods(); // Refresh the list
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Failed to delete food");
+    }
+  };
+
+  const handleAddTodayMeal = async (item: Meal) => {
+    try {
+      await saveTodayMeals(item);
+      onMealAdded();
+      Alert.alert("Success", "Meal added to today's list");
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Failed to add meal to today's list");
+    }
+  };
 
   return (
-    <View className={tw("flex-1", themeMode)}>
+    <View className="flex-1">
       <TextInput
-        className={`p-2.5 border-b border-${twColor(themeMode, "border")} text-${twColor(themeMode, "text")} mb-2.5`}
+        className={`mx-4 p-2.5 border-b border-${twColor(themeMode, "border")} text-${twColor(themeMode, "text")}`}
         value={searchQuery}
         onChangeText={setSearchQuery}
         placeholder="Search foods..."
         placeholderTextColor={`text-${twColor(themeMode, "text-secondary")}`}
       />
       <FlatList
-        data={FOOD_DATA.filter((food) =>
+        className="flex-1"
+        data={foods?.filter((food) =>
           food.name.toLowerCase().includes(searchQuery.toLowerCase()),
         )}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        refreshing={false}
+        onRefresh={loadFoods}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => onSelectFood(item)}
-            className={`flex-row justify-between p-4 border-b border-${twColor(themeMode, "border")}`}
+            onPress={() => handleAddTodayMeal(item)}
+            className={`flex-row justify-between items-center mx-4 p-4 border-b border-${twColor(themeMode, "border")}`}
           >
             <Text className={`text-base text-${twColor(themeMode, "text")}`}>
               {item.name}
             </Text>
-            <Text className={`text-${twColor(themeMode, "text-secondary")}`}>
-              {item.calories} cal
-            </Text>
+            <View className="flex-row items-center gap-4">
+              <Text className={`text-${twColor(themeMode, "text-secondary")}`}>
+                {item.calories} cal
+              </Text>
+              <TouchableOpacity
+                onPress={() => handleDeleteFood(item.id)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons name="trash-outline" size={24} color="#ff4444" />
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
         )}
       />

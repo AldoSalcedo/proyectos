@@ -18,7 +18,7 @@ export function NewFood() {
         </Text>
       </View>
       <View className="p-3">
-        <Link asChild href={"/addcalories"}>
+        <Link asChild href={"/addfoodformview"}>
           <Pressable>
             <InfoIcon />
           </Pressable>

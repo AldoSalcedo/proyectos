@@ -3,13 +3,13 @@ import { Tabs } from "expo-router";
 import { HomeIcon, InfoIcon } from "@/components/ui/Icons";
 import { useTheme } from "@/context/ThemeContext";
 import { twColor } from "@/utils/theme";
-import { ThemedView } from "@/components/themed";
+import { View } from "react-native";
 
 export default function TabsLayout() {
   const { themeMode } = useTheme();
 
   return (
-    <ThemedView className="flex-1">
+    <View className="flex-1">
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -36,6 +36,6 @@ export default function TabsLayout() {
           }}
         />
       </Tabs>
-    </ThemedView>
+    </View>
   );
 }
