@@ -1,7 +1,6 @@
 import React from "react";
 import { ViewProps, Text } from "react-native";
 import { useTheme } from "@/context/ThemeContext";
-import { tw } from "@/utils/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ThemedViewProps extends ViewProps {
@@ -14,12 +13,12 @@ export function ThemedView({
   style,
   ...props
 }: ThemedViewProps) {
-  const { themeMode } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <SafeAreaView
-      className={`bg-${themeMode === "dark" ? "dark" : "light"}-background ${tw(className, themeMode)}`}
-      style={style}
+      className={`bg-[${theme.background}] ${className}`}
+      style={[{ backgroundColor: theme.background }, style]}
       {...props}
     >
       {children}

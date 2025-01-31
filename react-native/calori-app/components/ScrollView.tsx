@@ -1,23 +1,14 @@
 import type { PropsWithChildren, ReactElement } from "react";
 import React from "react";
 import { View } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
-} from "react-native-reanimated";
+import Animated, { useAnimatedRef } from "react-native-reanimated";
 
 type Props = PropsWithChildren<{
   headerImage: ReactElement;
   headerBackgroundColor: { dark: string; light: string };
 }>;
 
-export default function ScrollView({
-  children,
-  headerImage,
-  headerBackgroundColor,
-}: Props) {
+export default function ScrollView({ children, headerImage }: Props) {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   return (
     <View>

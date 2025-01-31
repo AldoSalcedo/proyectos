@@ -1,26 +1,32 @@
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
-import { twColor } from "../utils/theme";
-import { InfoIcon } from "./ui/Icons";
+import { PlusIcon } from "./ui/Icons";
 import { Link } from "expo-router";
+import { ThemedText } from "./themed";
 
 export function NewFood() {
-  const { themeMode } = useTheme();
+  const { theme } = useTheme();
 
   return (
-    <View className="gap-1 flex-row justify-between items-center bg-white my-4">
+    <View
+      className="gap-1 flex-row justify-between items-center my-1"
+      style={{
+        backgroundColor: theme.surface,
+      }}
+    >
       <View className="p-3">
-        <Text
-          className={`text-xl font-bold text-${twColor(themeMode, "text")}`}
+        <ThemedText
+          style={{ color: theme.text }}
+          className={`text-xl font-bold`}
         >
           Add New Food
-        </Text>
+        </ThemedText>
       </View>
       <View className="p-3">
         <Link asChild href={"/addfoodformview"}>
           <Pressable>
-            <InfoIcon />
+            <PlusIcon color={theme.success} />
           </Pressable>
         </Link>
       </View>

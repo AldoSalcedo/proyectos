@@ -1,12 +1,11 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { HomeIcon, InfoIcon } from "@/components/ui/Icons";
+import { HomeIcon, PlusIcon } from "@/components/ui/Icons";
 import { useTheme } from "@/context/ThemeContext";
-import { twColor } from "@/utils/theme";
 import { View } from "react-native";
 
 export default function TabsLayout() {
-  const { themeMode } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <View className="flex-1">
@@ -14,11 +13,11 @@ export default function TabsLayout() {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: `bg-${twColor(themeMode, "surface")}`,
+            backgroundColor: theme.background,
             borderTopWidth: 0,
           },
-          tabBarActiveTintColor: `text-${twColor(themeMode, "primary")}`,
-          tabBarInactiveTintColor: `text-${twColor(themeMode, "text-secondary")}`,
+          tabBarActiveTintColor: theme.primary,
+          tabBarInactiveTintColor: theme.textSecondary,
         }}
       >
         <Tabs.Screen
@@ -32,7 +31,7 @@ export default function TabsLayout() {
           name="userinfo"
           options={{
             title: "Profile",
-            tabBarIcon: ({ color }) => <InfoIcon color={color} />,
+            tabBarIcon: ({ color }) => <PlusIcon color={color} />,
           }}
         />
       </Tabs>

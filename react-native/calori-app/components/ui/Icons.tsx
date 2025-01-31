@@ -19,7 +19,7 @@ export const HomeIcon = ({
   ...props
 }: IconProps) => <AntDesign name="home" size={size} color={color} {...props} />;
 
-export const InfoIcon = ({
+export const PlusIcon = ({
   size = 32,
   color = "green",
   ...props

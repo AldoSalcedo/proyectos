@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useTheme } from "../context/ThemeContext";
-import { tw, twColor } from "../utils/theme";
 import { Meal } from "../types";
 import CircularProgress from "react-native-circular-progress-indicator";
 
@@ -17,16 +16,10 @@ export function TodayCalories({ meals, goal = 2000 }: TodayCaloriesProps) {
   const progress = (totalCalories / goal) * 100;
 
   return (
-    <View className={tw("mx-4 rounded-xl p-4 shadow-lg", themeMode)}>
+    <View className={``}>
       <View className="flex-row justify-between items-center">
-        <Text
-          className={`text-lg font-semibold text-${twColor(themeMode, "text")}`}
-        >
-          Today's Calories
-        </Text>
-        <Text className={`text-${twColor(themeMode, "text-secondary")}`}>
-          Goal: {goal} cal
-        </Text>
+        <Text className={`text-lg font-semibold`}>Today's Calories</Text>
+        <Text className={``}>Goal: {goal} cal</Text>
       </View>
 
       <View className="items-center py-1">
@@ -35,7 +28,7 @@ export function TodayCalories({ meals, goal = 2000 }: TodayCaloriesProps) {
           valueSuffix="%"
           radius={40}
           duration={1000}
-          progressValueColor={`#${twColor(themeMode, "text")}`}
+          progressValueColor={``}
           maxValue={100}
           activeStrokeColor={remainingCalories < 0 ? "#ff4444" : "#4CAF50"}
         />
@@ -43,27 +36,12 @@ export function TodayCalories({ meals, goal = 2000 }: TodayCaloriesProps) {
 
       <View className="flex-row justify-around mt-2">
         <View className="items-center">
-          <Text
-            className={`text-xl font-semibold text-${twColor(themeMode, "text")}`}
-          >
-            {totalCalories}
-          </Text>
-          <Text className={`text-${twColor(themeMode, "text-secondary")} mt-1`}>
-            Consumed
-          </Text>
+          <Text className={`text-xl font-semibold`}>{totalCalories}</Text>
+          <Text className={``}>Consumed</Text>
         </View>
         <View className="items-center">
-          <Text
-            className={`text-xl font-semibold text-${twColor(
-              themeMode,
-              remainingCalories < 0 ? "error" : "success",
-            )}`}
-          >
-            {remainingCalories}
-          </Text>
-          <Text className={`text-${twColor(themeMode, "text-secondary")} mt-1`}>
-            Remaining
-          </Text>
+          <Text className={`text-xl font-semibold`}>{remainingCalories}</Text>
+          <Text className={``}>Remaining</Text>
         </View>
       </View>
     </View>

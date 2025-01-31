@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Meal } from "../types";
 import { useTheme } from "../context/ThemeContext";
-import { twColor } from "../utils/theme";
 import { useFoodStorage } from "@/hooks/useFoodStorage";
 import { Ionicons } from "@expo/vector-icons";
 import { useFoodContext } from "@/context/FoodContext";
@@ -19,7 +18,7 @@ interface FoodListProps {
 }
 
 export function FoodList({ onMealAdded }: FoodListProps) {
-  const { themeMode } = useTheme();
+  const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [foods, setFoods] = useState<Meal[]>([]);
   const { refreshTimestamp } = useFoodContext();
@@ -64,11 +63,16 @@ export function FoodList({ onMealAdded }: FoodListProps) {
   return (
     <View className="flex-1">
       <TextInput
-        className={`mx-4 p-2.5 border-b border-${twColor(themeMode, "border")} text-${twColor(themeMode, "text")}`}
+        style={{
+          color: theme.text,
+          borderBottomColor: theme.border,
+          backgroundColor: theme.surface,
+        }}
+        className="mx-4 p-2.5 border-b"
         value={searchQuery}
         onChangeText={setSearchQuery}
         placeholder="Search foods..."
-        placeholderTextColor={`text-${twColor(themeMode, "text-secondary")}`}
+        placeholderTextColor={theme.textSecondary}
       />
       <FlatList
         className="flex-1"
@@ -82,20 +86,24 @@ export function FoodList({ onMealAdded }: FoodListProps) {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => handleAddTodayMeal(item)}
-            className={`flex-row justify-between items-center mx-4 p-4 border-b border-${twColor(themeMode, "border")}`}
+            style={{
+              borderBottomColor: theme.border,
+              backgroundColor: theme.surface,
+            }}
+            className="flex-row justify-between items-center mx-4 p-4 border-b"
           >
-            <Text className={`text-base text-${twColor(themeMode, "text")}`}>
+            <Text style={{ color: theme.text }} className="text-base">
               {item.name}
             </Text>
             <View className="flex-row items-center gap-4">
-              <Text className={`text-${twColor(themeMode, "text-secondary")}`}>
+              <Text style={{ color: theme.textSecondary }}>
                 {item.calories} cal
               </Text>
               <TouchableOpacity
                 onPress={() => handleDeleteFood(item.id)}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <Ionicons name="trash-outline" size={24} color="#ff4444" />
+                <Ionicons name="trash-outline" size={24} color={theme.error} />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>

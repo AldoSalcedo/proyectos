@@ -1,36 +1,49 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
-
-export type ThemeMode = "light" | "dark";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { themes, ThemeType } from "@/utils/theme";
 
 interface ThemeContextType {
-  themeMode: ThemeMode;
+  themeMode: ThemeType;
   toggleTheme: () => void;
+  theme: typeof themes.light;
 }
 
-const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const systemColorScheme = useColorScheme();
-  const [themeMode, setThemeMode] = useState<ThemeMode>(
-    systemColorScheme || "light",
-  );
+  const systemTheme = useColorScheme();
+  const [themeMode, setThemeMode] = useState<ThemeType>(systemTheme || "light");
 
   useEffect(() => {
-    if (systemColorScheme) {
-      setThemeMode(systemColorScheme);
-    }
-  }, [systemColorScheme]);
+    const loadTheme = async () => {
+      const storedTheme = await AsyncStorage.getItem("themeMode");
+      if (storedTheme) {
+        setThemeMode(storedTheme as ThemeType);
+      }
+    };
+    loadTheme();
+  }, []);
 
-  const toggleTheme = () => {
-    setThemeMode((prev) => (prev === "light" ? "dark" : "light"));
+  const theme = themes[themeMode];
+
+  const toggleTheme = async () => {
+    const newThemeMode = themeMode === "light" ? "dark" : "light";
+    setThemeMode(newThemeMode);
+    await AsyncStorage.setItem("themeMode", newThemeMode);
   };
 
   return (
-    <ThemeContext.Provider value={{ themeMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ themeMode, toggleTheme, theme }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};

@@ -3,7 +3,6 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { Meal } from "../types";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
-import { twColor } from "../utils/theme";
 
 interface TodayMealsProps {
   meals: Meal[];
@@ -16,11 +15,7 @@ export function TodayMeals({ meals, onDelete }: TodayMealsProps) {
   if (!meals.length) {
     return (
       <View className="h-32 justify-center items-center">
-        <Text
-          className={`text-${twColor(themeMode, "text-secondary")} text-base`}
-        >
-          No meals added today
-        </Text>
+        <Text className={`text-base`}>No meals added today</Text>
       </View>
     );
   }
@@ -33,17 +28,11 @@ export function TodayMeals({ meals, onDelete }: TodayMealsProps) {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View
-            className={`flex-row justify-between items-center p-4 border-b border-${twColor(themeMode, "border")}`}
+            className={`flex-row justify-between items-center p-4 border-b `}
           >
             <View>
-              <Text
-                className={`text-base font-medium text-${twColor(themeMode, "text")}`}
-              >
-                {item.name}
-              </Text>
-              <Text
-                className={`text-${twColor(themeMode, "text-secondary")} mt-1`}
-              >
+              <Text className={`text-base font-medium `}>{item.name}</Text>
+              <Text className={``}>
                 {item.portion}g • {item.calories} cal
               </Text>
             </View>

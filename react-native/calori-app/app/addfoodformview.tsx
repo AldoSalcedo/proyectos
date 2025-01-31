@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -11,12 +10,10 @@ import { Link, useRouter } from "expo-router";
 import { useFoodStorage } from "../hooks/useFoodStorage";
 import { HomeIcon } from "@/components/ui/Icons";
 import { useTheme } from "@/context/ThemeContext";
-import { twColor, twText } from "@/utils/theme";
-import { ThemedView } from "@/components/themed";
+import { ThemedView, ThemedText } from "@/components/themed";
 import { useFoodContext } from "@/context/FoodContext";
 
 export default function AddFood() {
-  const { themeMode } = useTheme();
   const [name, setName] = useState<string>("");
   const [calories, setCalories] = useState<string>("");
   const [portion, setPortion] = useState<string>("");
@@ -24,6 +21,7 @@ export default function AddFood() {
   const router = useRouter();
   const { saveMeal } = useFoodStorage();
   const { refreshFoods } = useFoodContext();
+  const { theme } = useTheme();
 
   async function handleSave() {
     if (!name.trim() || !calories.trim() || !portion.trim()) {
@@ -47,59 +45,78 @@ export default function AddFood() {
     }
   }
 
+  const inputStyle = {
+    backgroundColor: theme.surface,
+    color: theme.text,
+    borderColor: theme.border,
+  };
+
   return (
-    <ThemedView className="p-5">
+    <ThemedView className="flex-1 p-5">
       <Link asChild href={"/"}>
         <Pressable className="pb-2 active:opacity-80">
-          <HomeIcon color={`text-${twColor(themeMode, "primary")}`} />
+          <HomeIcon color={theme.primary} />
         </Pressable>
       </Link>
 
-      <Text className={`text-xl font-bold ${twText(themeMode)}`}>
+      <ThemedText
+        className="text-xl font-bold mb-4"
+        style={{ color: theme.text }}
+      >
         Add New Food
-      </Text>
+      </ThemedText>
 
       <View className="mt-4 space-y-4">
         <View>
-          <Text className={twText(themeMode)}>Food Name</Text>
+          <ThemedText className="mb-2" style={{ color: theme.text }}>
+            Food Name
+          </ThemedText>
           <TextInput
             value={name}
             onChangeText={setName}
             placeholder="Enter food name"
-            className={`mt-1 p-2 border rounded-lg ${twText(themeMode)} border-${twColor(themeMode, "border")}`}
-            placeholderTextColor={`text-${twColor(themeMode, "text-secondary")}`}
+            className="p-3 rounded-lg border"
+            style={inputStyle}
+            placeholderTextColor={theme.textSecondary}
           />
         </View>
 
         <View>
-          <Text className={twText(themeMode)}>Calories</Text>
+          <ThemedText className="mb-2" style={{ color: theme.text }}>
+            Calories
+          </ThemedText>
           <TextInput
             value={calories}
             onChangeText={setCalories}
             placeholder="Enter calories"
             keyboardType="numeric"
-            className={`mt-1 p-2 border rounded-lg ${twText(themeMode)} border-${twColor(themeMode, "border")}`}
-            placeholderTextColor={`text-${twColor(themeMode, "text-secondary")}`}
+            className="p-3 rounded-lg border"
+            style={inputStyle}
+            placeholderTextColor={theme.textSecondary}
           />
         </View>
 
         <View>
-          <Text className={twText(themeMode)}>Portion (grams)</Text>
+          <ThemedText className="mb-2" style={{ color: theme.text }}>
+            Portion (grams)
+          </ThemedText>
           <TextInput
             value={portion}
             onChangeText={setPortion}
             placeholder="Enter portion size"
             keyboardType="numeric"
-            className={`mt-1 p-2 border rounded-lg ${twText(themeMode)} border-${twColor(themeMode, "border")}`}
-            placeholderTextColor={`text-${twColor(themeMode, "text-secondary")}`}
+            className="p-3 rounded-lg border"
+            style={inputStyle}
+            placeholderTextColor={theme.textSecondary}
           />
         </View>
 
         <TouchableOpacity
           onPress={handleSave}
-          className={`mt-4 p-4 rounded-lg bg-${twColor(themeMode, "secondary")}`}
+          style={{ backgroundColor: theme.success }}
+          className="mt-6 p-4 rounded-lg items-center"
         >
-          <Text className={`${twText(themeMode)}`}>Save Food</Text>
+          <ThemedText style={{ color: theme.text }}>Save Food</ThemedText>
         </TouchableOpacity>
       </View>
     </ThemedView>

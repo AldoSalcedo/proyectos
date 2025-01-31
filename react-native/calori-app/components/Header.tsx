@@ -1,7 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
-import { twColor } from "../utils/theme";
 import { UserAvatarImage } from "./ui/Icons";
 
 interface UserInfoProps {
@@ -9,17 +8,20 @@ interface UserInfoProps {
 }
 
 export function Header({ name }: UserInfoProps) {
-  const { themeMode } = useTheme();
+  const { theme } = useTheme();
 
   return (
-    <View className="gap-1 flex-row justify-between items-center bg-white">
+    <View
+      style={{
+        backgroundColor: theme.surface,
+      }}
+      className="gap-1 flex-row justify-between items-center"
+    >
       <View className="p-3">
-        <Text
-          className={`text-xl font-bold text-${twColor(themeMode, "text")}`}
-        >
+        <Text style={{ color: theme.text }} className="text-xl font-bold">
           {name}
         </Text>
-        <Text className={`text-${twColor(themeMode, "text-secondary")}`}>
+        <Text style={{ color: theme.textSecondary }}>
           Welcome back to your goal
         </Text>
       </View>
