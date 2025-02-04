@@ -61,14 +61,14 @@ export function FoodList({ onMealAdded }: FoodListProps) {
   };
 
   return (
-    <View className="flex-1">
+    <>
       <TextInput
         style={{
           color: theme.text,
           borderBottomColor: theme.border,
           backgroundColor: theme.surface,
         }}
-        className="mx-4 p-2.5 border-b"
+        className="border-b"
         value={searchQuery}
         onChangeText={setSearchQuery}
         placeholder="Search foods..."
@@ -90,7 +90,7 @@ export function FoodList({ onMealAdded }: FoodListProps) {
               borderBottomColor: theme.border,
               backgroundColor: theme.surface,
             }}
-            className="flex-row justify-between items-center mx-4 p-4 border-b"
+            className="flex-row justify-between items-center p-4 border-b"
           >
             <Text style={{ color: theme.text }} className="text-base">
               {item.name}
@@ -109,6 +109,6 @@ export function FoodList({ onMealAdded }: FoodListProps) {
           </TouchableOpacity>
         )}
       />
-    </View>
+    </>
   );
 }

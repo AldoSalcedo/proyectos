@@ -14,13 +14,13 @@ interface AvatarProps {
 }
 
 export const HomeIcon = ({
-  size = 32,
+  size = 29,
   color = "white",
   ...props
 }: IconProps) => <AntDesign name="home" size={size} color={color} {...props} />;
 
 export const PlusIcon = ({
-  size = 32,
+  size = 27,
   color = "green",
   ...props
 }: IconProps) => (

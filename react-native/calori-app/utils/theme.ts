@@ -5,8 +5,8 @@ export function cn(...classes: (string | undefined | null | boolean)[]) {
 export const themes = {
   light: {
     primary: "#007AFF",
-    background: "#FFFFFF",
-    surface: "#F2F2F7",
+    background: "#F2F2F7",
+    surface: "#FFFFFF",
     text: "#000000",
     textSecondary: "#6B7280",
     border: "#E5E5EA",

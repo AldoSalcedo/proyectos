@@ -4,31 +4,31 @@ import { ThemeProvider } from "../context/ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { ThemedView } from "@/components/themed";
+import { HomeThemedView } from "@/components/themed";
 import { FoodProvider } from "../context/FoodContext";
 import { useTheme } from "../context/ThemeContext";
 
 SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
-  const { themeMode } = useTheme();
+  const { themeMode, theme } = useTheme();
 
   const statusBarStyle = themeMode === "dark" ? "light" : "dark";
 
   return (
-    <ThemedView className="flex-1">
+    <HomeThemedView className="flex-1">
       <Stack
         screenOptions={{
           headerShown: false,
           contentStyle: {
-            backgroundColor: "transparent",
+            backgroundColor: theme.background,
           },
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style={statusBarStyle} />
-    </ThemedView>
+    </HomeThemedView>
   );
 }
 

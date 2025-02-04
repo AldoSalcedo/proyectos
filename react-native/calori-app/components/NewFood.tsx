@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Pressable, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { PlusIcon } from "./ui/Icons";
@@ -10,7 +10,7 @@ export function NewFood() {
 
   return (
     <View
-      className="gap-1 flex-row justify-between items-center my-1"
+      className="gap-1 flex-row justify-between items-center m-2 rounded-xl"
       style={{
         backgroundColor: theme.surface,
       }}

@@ -1,11 +1,11 @@
-import React from "react";
+import * as React from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { View } from "react-native";
+import { ThemedView } from "@/components/themed";
 
 export default function UserInfoScreen() {
   return (
-    <View className="flex-1">
+    <ThemedView className="flex-1">
       <ThemeToggle />
-    </View>
+    </ThemedView>
   );
 }

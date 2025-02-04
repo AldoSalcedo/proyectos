@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View } from "react-native";
 import { TodayCalories } from "@/components/TodayCalories";
 import { Header } from "@/components/Header";
 import { FoodList } from "@/components/FoodList";
@@ -8,6 +7,7 @@ import { TodayMeals } from "@/components/TodayMeals";
 import { useFoodStorage } from "@/hooks/useFoodStorage";
 import { Alert } from "react-native";
 import { Meal } from "@/types";
+import { ThemedView } from "@/components/themed";
 
 export default function HomeScreen() {
   const [todayMeals, setTodayMeals] = useState<Meal[]>([]);
@@ -33,17 +33,14 @@ export default function HomeScreen() {
   };
 
   return (
-    <View className="flex-1">
+    <ThemedView className="flex-1">
       <Header name={"Aldo Salcedo"} />
 
-      <View className="h-[60%]">
-        <NewFood />
-        <TodayCalories meals={todayMeals} />
-        <TodayMeals meals={todayMeals} onDelete={handleDeleteTodayMeal} />
-      </View>
-      <View className="h-[40%] border-t border-gray-200">
-        <FoodList onMealAdded={loadTodayMeals} />
-      </View>
-    </View>
+      <NewFood />
+      <TodayCalories meals={todayMeals} />
+      <TodayMeals meals={todayMeals} onDelete={handleDeleteTodayMeal} />
+
+      <FoodList onMealAdded={loadTodayMeals} />
+    </ThemedView>
   );
 }
